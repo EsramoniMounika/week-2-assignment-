@@ -1,0 +1,206 @@
+## Week 2 Assignment 
+
+# heap sort using python 
+
+def heap_sort(arr):
+    n = len(arr)
+
+    # Build a max heap
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+
+    # Extract elements from heap one by one
+    for i in range(n - 1, 0, -1):
+        # Swap root element with the last element
+        arr[0], arr[i] = arr[i], arr[0]
+        # Call heapify on the reduced heap
+        heapify(arr, i, 0)
+
+def heapify(arr, n, i):
+    # Find largest among root, left child and right child
+    largest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
+
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+
+    if right < n and arr[right] > arr[largest]:
+        largest = right
+
+    # Swap root with largest element if necessary
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        # Recursively heapify the affected sub-tree
+        heapify(arr, n, largest)
+
+# Testing
+arr = [12, 11, 13, 5, 6, 7]
+heap_sort(arr)
+print("Sorted array is:")
+print(arr)
+
+# heap sort using java
+
+public class HeapSort {
+    public void sort(int[] arr) {
+        int n = arr.length;
+
+        // Build heap (rearrange array)
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapify(arr, n, i);
+
+        // One by one extract an element from heap
+        for (int i = n - 1; i >= 0; i--) {
+            // Move current root to end
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+
+            // call max heapify on the reduced heap
+            heapify(arr, i, 0);
+        }
+    }
+
+    // To heapify a subtree rooted with node i which is
+    // an index in arr[]. n is size of heap
+    void heapify(int[] arr, int n, int i) {
+        int largest = i; // Initialize largest as root
+        int l = 2 * i + 1; // left = 2*i + 1
+        int r = 2 * i + 2; // right = 2*i + 2
+
+        // If left child is larger than root
+        if (l < n && arr[l] > arr[largest])
+            largest = l;
+
+        // If right child is larger than largest so far
+        if (r < n && arr[r] > arr[largest])
+            largest = r;
+
+        // If largest is not root
+        if (largest != i) {
+            int swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
+
+            // Recursively heapify the affected sub-tree
+            heapify(arr, n, largest);
+        }
+    }
+
+    // Testing
+    public static void main(String args[]) {
+        int arr[] = { 12, 11, 13, 5, 6, 7 };
+        int n = arr.length;
+
+        HeapSort ob = new HeapSort();
+        ob.sort(arr);
+
+        System.out.println("Sorted array is");
+        for (int i = 0; i < n; ++i)
+            System.out.print(arr[i] + " ");
+    }
+}
+
+
+# radix sort using python
+
+def radix_sort(arr):
+    # Find the maximum number to know the number of digits
+    max_num = max(arr)
+    # Initialize the exp variable to the least significant digit
+    exp = 1
+
+    # Loop until we reach the most significant digit
+    while max_num // exp > 0:
+        # Call the counting sort function for each digit position
+        counting_sort(arr, exp)
+        exp *= 10
+
+def counting_sort(arr, exp):
+    n = len(arr)
+    output = [0] * n
+    count = [0] * 10
+
+    # Count the frequency of each digit
+    for i in range(n):
+        digit = (arr[i] // exp) % 10
+        count[digit] += 1
+
+    # Modify count array to hold the cumulative sum
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    # Build the output array in reverse order
+    for i in range(n - 1, -1, -1):
+        digit = (arr[i] // exp) % 10
+        output[count[digit] - 1] = arr[i]
+        count[digit] -= 1
+
+    # Copy the output array back to the original array
+    for i in range(n):
+        arr[i] = output[i]
+
+# Testing
+arr = [170, 45, 75, 90, 802, 24, 2, 66]
+radix_sort(arr)
+print("Sorted array is:")
+print(arr)
+
+# radix sort using java
+
+public class RadixSort {
+    public static void sort(int[] arr) {
+        int n = arr.length;
+        int max = getMax(arr);
+
+        for (int exp = 1; max / exp > 0; exp *= 10) {
+            countSort(arr, n, exp);
+        }
+    }
+
+    private static int getMax(int[] arr) {
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+        return max;
+    }
+
+    private static void countSort(int[] arr, int n, int exp) {
+        int[] output = new int[n];
+        int[] count = new int[10];
+
+        for (int i = 0; i < n; i++) {
+            int digit = (arr[i] / exp) % 10;
+            count[digit]++;
+        }
+
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            int digit = (arr[i] / exp) % 10;
+            output[count[digit] - 1] = arr[i];
+            count[digit]--;
+        }
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = output[i];
+        }
+    }
+
+    // Testing
+    public static void main(String[] args) {
+        int[] arr = { 170, 45, 75, 90, 802, 24, 2, 66 };
+        sort(arr);
+        System.out.println("Sorted array is:");
+        for (int i : arr) {
+            System.out.print(i + " ");
+        }
+    }
+}
+
